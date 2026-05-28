@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Aku Suka Mengaji</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght=500;700&display=swap');
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .benar-animasi { animation: bounce 0.6s ease; }
+        .salah-animasi { animation: shake 0.4s ease; }
+        .soal-baru { animation: fadeIn 0.5s ease-out; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #e0f7fa;
+            background-image: 
+                radial-gradient(#ffffff 15%, transparent 16%),
+                radial-gradient(#ffffff 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: #2e7d32;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container1 {
+            background: white;
+            padding: 35px;
+            border-radius: 30px;
+            box-shadow: 0 20px 0 #b2dfdb; 
+            border: 8px solid #4caf50;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .container1::before {
+            content: "🕌";
+            font-size: 45px;
+            position: absolute;
+            top: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4caf50;
+            border-radius: 50% 50% 0 0;
+            padding: 10px;
+        }
+
+        h1 { font-size: 32px; text-shadow: 2px 2px #fff; margin-top: 20px; }
+
+        .display_huruf {
+            font-size: 112px;
+            background: #fff9c4; 
+            width: 170px;
+            height: 170px;
+            line-height: 160px;
+            margin: 20px auto;
+            border-radius: 30px;
+            border: 3px dashed #ff9800;
+            color: #333;
+        }
+
+        .hasil_skor{
+            background: #b2dfdb;
+            color: #fff;
+            padding: 5px 20px;
+            border-radius: 15px;
+            display: inline-block;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #ffca28; 
+            color: #5d4037;
+            border: none;
+            padding: 15px 10px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #ffa000;
+            transition: all 0.1s;
+        }
+
+        button:active { transform: translateY(4px); box-shadow: 0 2px 0 #ffa000; }
+
+        #pesan { height: 50px; margin-top: 20px; font-size: 22px; font-weight: 700; }
+
+        .btn-mulai {
+            background-color: #4fc3f7;
+            box-shadow: 0 6px 0 #0288d1;
+            color: white;
+            margin-top: 20px;
+            padding: 15px;
+            width: 100%;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .btn-mulai:active { transform: translateY(4px); box-shadow: 0 2px 0 #0288d1; }
+
+        .copyright {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            color: black;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        .bck-button {
+            background-color: #ffc000;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 35px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            box-shadow: 0 4px 0 #d4a000; 
+            transition: all 0.1s ease;
+        }
+
+        .bck-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #d4a000;
+        }      
+    </style>
+</head>
+
+<body>
+    <div class="container1">
+        <a href="index.html" class="bck-button">◀ Kembali</a>
+
+        <div class="hasil_skor">Score: <span id="skor-angka">0</span></div>
+        <h1>Kuis Hijaiyah 🤗</h1>
+        <div class="display_huruf" id="targethuruf">?</div>
+        <div class="options" id="options-container"></div>
+        <div id="pesan"></div>
+        <button class="btn-mulai" onclick="mulaigame()">Acak Soal 🔄</button>
+    </div>
+
+    <div class="copyright">
+        &copy;2026 TPA Al-Hidayah
+    </div>
+
+<script>
+    const daftarhurufhijaiyah = [
+        {h:"ا", j:"Alif"}, {h:"ب", j:"Ba"}, {h:"ت", j:"Ta"},
+        {h:"ث", j:"Tsa"}, {h:"ج", j:"Jim"}, {h:"ح", j:"Ha"},
+        {h:"خ", j:"Kho"}, {h:"د", j:"Dal"}, {h:"ذ", j:"Dzal"},
+        {h:"ر", j:"Ra"}, {h:"ز" , j:"Za'"}, {h:"س", j:"Sin"}, 
+        {h:"ش", j:"Syin"}, {h:"ص" , j:"Shad"}, {h:"ض" , j:"Dhad"}, 
+        {h:"ط" , j:"Tha'"}, {h:"ظ" , j:"Zha'"}, {h:"ع", j:"'Ain"},
+        {h:"غ" , j:"Ghain"}, {h:"ف" , j:"Fa"}, {h:"ق" , j:"Qaf"},
+        {h:"ك" , j:"Kaf"}, {h:"ل" , j:"Lam"}, {h:"م" , j:"Mim"},
+        {h:"و" , j:"Waw"}, {h:"ه" , j:"Ha'"}, {h:"ء" , j:"Hamzah"},
+        {h:"ي" , j:"Ya'"}, {h:"ن" , j:"Nun"},
+    ];
+
+    let jawabanbenar = "";
+    let Score = 0;
+
+    const suarabenar = new Audio('sound tpa/dragon-studio-correct-472358.mp3');
+    const suarasalah = new Audio('sound tpa/freesound_community-buzzer2-6109.mp3');
+    const suaramusik = new Audio('sound tpa/nastelbom-children-children-music-513415.mp3');
+    suaramusik.loop = true;
+    suaramusik.volume = 0.5;
+
+    function mulaigame() {
+        suaramusik.play().catch(e => console.log("Menunggu interaksi user untuk musik"));
+        
+        const pesan = document.getElementById('pesan');
+        const containertombol = document.getElementById('options-container');
+        const targethuruf = document.getElementById('targethuruf');
+
+        pesan.innerText = "";
+        containertombol.innerHTML = "";
+        targethuruf.classList.remove('benar-animasi', 'salah-animasi', 'soal-baru');
+        void targethuruf.offsetWidth; 
+        targethuruf.classList.add('soal-baru');
+
+        const acak = daftarhurufhijaiyah[Math.floor(Math.random() * daftarhurufhijaiyah.length)]; 
+        jawabanbenar = acak.j;
+        targethuruf.innerText = acak.h;
+        
+        let pilihan = [acak.j];
+        while(pilihan.length < 4) { 
+            let salah = daftarhurufhijaiyah[Math.floor(Math.random() * daftarhurufhijaiyah.length)].j;
+            if(!pilihan.includes(salah)) pilihan.push(salah);
+        }
+
+        pilihan.sort(() => Math.random() - 0.5);
+
+        pilihan.forEach(teks => {
+            const btn = document.createElement('button');
+            btn.innerText = teks;
+            btn.onclick = () => cekJawaban(teks);
+            containertombol.appendChild(btn);
+        });
+    }
+
+    function cekJawaban(pilihanuser) {
+        const pesan = document.getElementById('pesan');
+        const targethuruf = document.getElementById('targethuruf');
+        const skorteks = document.getElementById('skor-angka');
+
+        targethuruf.classList.remove('benar-animasi', 'salah-animasi', 'soal-baru');
+        void targethuruf.offsetWidth; 
+
+        if(pilihanuser === jawabanbenar) {
+            suarabenar.play();
+            Score += 10;
+            skorteks.innerText = Score;
+            pesan.innerText = "Maa syaa Allah! Hebat! 🎉";
+            pesan.style.color = "#2e7d32";
+            targethuruf.classList.add('benar-animasi');
+            
+            if(Score >= 100){
+                setTimeout(() => {
+                    alert("Selamat! Anda Juara 🏆");
+                    resetgame();
+                }, 500);
+                return;
+            }
+
+            setTimeout(() => {
+                mulaigame();
+            }, 1250);
+            
+        } else {
+            suarasalah.play();
+            if(Score > 0) Score -= 5;
+            skorteks.innerText = Score;
+            pesan.innerText = "Ayo coba lagi! 😊";
+            pesan.style.color = "#d32f2f";
+            targethuruf.classList.add('salah-animasi');
+        }
+    }
+
+    function resetgame(){
+        Score = 0;
+        document.getElementById('skor-angka').innerText = Score;
+        mulaigame();
+    }
+
+</script>
+</body>
+</html>
